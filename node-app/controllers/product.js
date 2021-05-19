@@ -9,7 +9,6 @@ const Op = db.Sequelize.Op;
  */
 
 exports.addProduct = (req, res) => {
-    console.log("req ==>", req.body)
     Product.create(req.body)
         .then(task => {
             res.status(200).send({
@@ -40,6 +39,33 @@ exports.getProducts = (req, res) => {
                 data: tasks
             });
         })
+        .catch(err => {
+            res.status(500).send({ status: false, message: err.message });
+        });
+};
+
+
+/**
+ * edit Products
+ * @param {*} req 
+ * @param {*} res 
+ */
+exports.editProduct = (req, res) => {
+
+    let data = req.body
+
+    let query = {
+        where: { id: req.params.id },
+        returning: true,
+    }
+
+    Product.update(data, query).then(updatedTask => {
+        res.status(200).send({
+            status: true,
+            data: updatedTask,
+            message: "Subtask updated successfully!",
+        });
+    })
         .catch(err => {
             res.status(500).send({ status: false, message: err.message });
         });

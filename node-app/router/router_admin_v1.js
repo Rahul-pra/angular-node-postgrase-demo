@@ -12,5 +12,6 @@ const productController = require('../controllers/product')
 module.exports.set = (app) => {
     app.post(apiEndpint + '/addProduct', productController.addProduct);
     app.get(apiEndpint + '/getproducts', productController.getProducts);
+    app.put(apiEndpint + '/editProduct/:id', productController.editProduct);
 }
 

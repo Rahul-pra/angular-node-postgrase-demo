@@ -15,6 +15,9 @@ export class ProductComponent implements OnInit {
   closeResult: any;
   submitted = false;
   prouctList: any;
+  isEdit = false;
+  editId: any;
+  message: any;
 
   constructor(
     private modalService: NgbModal,
@@ -30,7 +33,7 @@ export class ProductComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getProducts()
+    this.getProducts();
   }
 
   getProducts() {
@@ -42,7 +45,26 @@ export class ProductComponent implements OnInit {
 
   get f() { return this.productForm.controls; }
 
-  open(content: any) {
+  open(content: any, isEdit: any) {
+    if (!!isEdit && isEdit.id) {
+      this.isEdit = true;
+      this.editId = isEdit.id
+      this.productForm.setValue({
+        productName: isEdit.productName,
+        description: isEdit.description,
+        productCode: isEdit.productCode,
+        isActive: isEdit.isActive,
+      })
+    } else {
+      this.isEdit = false;
+      this.editId = null;
+      this.productForm.setValue({
+        productName: '',
+        description: '',
+        productCode: '',
+        isActive: false,
+      })
+    }
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' }).result.then((result) => {
       this.closeResult = `Closed with: ${result}`;
     }, (reason) => {
@@ -68,12 +90,35 @@ export class ProductComponent implements OnInit {
     if (this.productForm.invalid) {
       return;
     }
+    if (this.productForm.value.productCode && !this.isEdit) {
+      let check = this.prouctList.filter((item: any) => {
+        return item.productCode === this.productForm.value.productCode
+      });
+      if (check.length > 0) {
+        this.message = 'Product code is available please add new'
+
+        setTimeout(() => {
+          this.message = null;
+        }, 3000);
+        return;
+      }
+    }
     // TODO: Use EventEmitter with form value
-    console.log(this.productForm.value);
-    this.productService.addProduct(this.productForm.value).subscribe((res: any) => {
-      this.getProducts()
-      this.productForm.reset()
-    })
+    console.log(this.productForm.value.productCode);
+    if (this.editId) {
+      // edit 
+      console.log("inside edit")
+      this.productService.editProduct(this.productForm.value, this.editId).subscribe((res: any) => {
+        this.getProducts()
+        this.productForm.reset()
+      })
+    } else {
+      // add 
+      this.productService.addProduct(this.productForm.value).subscribe((res: any) => {
+        this.getProducts()
+        this.productForm.reset()
+      })
+    }
   }
 
 }
