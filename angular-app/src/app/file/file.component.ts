@@ -13,7 +13,7 @@ export class FileComponent implements OnInit {
   spinnerEnabled = false;
   keys: string[];
   dataSheet: any;
-  @ViewChild('inputFile');
+  @ViewChild('inputFile')
   isExcelFile: any;
 
   constructor(private inputFile: ElementRef) {
