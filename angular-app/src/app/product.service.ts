@@ -57,5 +57,18 @@ export class ProductService {
     );
   }
 
+  fileUpload(data: any) {
+    return this.http.put(`${this.BASE_URL}/fileUpload`, data, this.httpOptions).pipe(
+      map(
+        (response: any) => {
+          return response;
+        },
+        (error: any) => {
+          throw error;
+        }
+      )
+    );
+  }
+
 
 }
