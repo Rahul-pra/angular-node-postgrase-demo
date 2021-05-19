@@ -1,0 +1,101 @@
+<button class="btn btn-lg btn-outline-primary" (click)="open(mymodal)">Add Product</button>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">ProductId</th>
+            <th scope="col">Product Name</th>
+            <th scope="col">Description</th>
+            <th scope="col">Product Code</th>
+            <th scope="col">Is Active</th>
+            <th scope="col">Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let item of prouctList; index as i">
+            <th scope="row">{{item.id}}</th>
+            <td>{{item.productName}}</td>
+            <td>{{item.description}}</td>
+            <td>{{item.productCode}}</td>
+            <td>{{item.isActive}}</td>
+            <td><button type="button" class="btn btn-primary">Edit </button></td>
+        </tr>
+    </tbody>
+</table>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                ...
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #mymodal let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Add Product</h4>
+        <button type="button" class="btn btn-lg btn-outline-primary" aria-label="Close"
+            (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">×</span>
+        </button>
+    </div>
+    <form [formGroup]="productForm" (ngSubmit)="onSubmit()">
+        <div class="modal-body">
+            <div class="form-group">
+                <label for="productName">Product Name</label>
+                <input type="email" class="form-control" formControlName="productName" id="productName"
+                    placeholder="Product Name" [ngClass]="{ 'is-invalid': submitted && f.productName.errors }">
+                <small *ngIf="submitted && f.productName.errors" class="form-text text-muted">
+                    <div *ngIf="f.productName.errors.required">Product name is required</div>
+                </small>
+            </div>
+
+            <div class="form-group">
+                <label for="description">Description</label>
+                <textarea class="form-control" id="description" rows="3" formControlName="description"
+                    [ngClass]="{ 'is-invalid': submitted && f.description.errors }"></textarea>
+                <small *ngIf="submitted && f.description.errors" class="form-text text-muted">
+                    <div *ngIf="f.description.errors.required">Description is required</div>
+                </small>
+            </div>
+
+            <div class="form-group">
+                <label for="productCode">Product Code</label>
+                <input type="email" class="form-control" formControlName="productCode" id="productCode"
+                    placeholder="Product Code" [ngClass]="{ 'is-invalid': submitted && f.productCode.errors }">
+                <small *ngIf="submitted && f.productCode.errors" class="form-text text-muted">
+                    <div *ngIf="f.productCode.errors.required">Product code is required</div>
+                </small>
+            </div>
+
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" formControlName="isActive" type="checkbox" id="isActive"
+                    [ngClass]="{ 'is-invalid': submitted && f.isActive.errors }">
+                <label class="form-check-label" for="isActive"> IsActive </label>
+                <small *ngIf="submitted && f.isActive.errors" class="form-text text-muted">
+                    <div *ngIf="f.isActive.errors.required">IsActive is required</div>
+                </small>
+            </div>
+
+        </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-primary mr-1">Save</button>
+            <!-- <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Ok</button> -->
+        </div>
+
+    </form>
+</ng-template>
